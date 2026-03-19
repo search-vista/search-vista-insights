@@ -66,7 +66,7 @@ async function runCollection(req: Request) {
         if (insertError) throw insertError
 
         // Slack alert: check for performance drop
-        await maybeAlertSlack(site.id, site.name, scores.performance)
+        await maybeAlertSlack(site.id, site.name, site.url, scores.performance)
 
         results.push({ siteId: site.id, success: true })
       } catch (err) {
@@ -109,6 +109,7 @@ async function runCollection(req: Request) {
 async function maybeAlertSlack(
   siteId: string,
   siteName: string,
+  siteUrl: string,
   newPerformance: number | null
 ) {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL
@@ -130,11 +131,13 @@ async function maybeAlertSlack(
 
   const drop = previousPerformance - newPerformance
   if (drop >= SLACK_ALERT_DROP_THRESHOLD) {
+    const psiUrl = `https://pagespeed.web.dev/report?url=${encodeURIComponent(siteUrl)}`
+    const dashboardUrl = 'https://search-vista-insights.vercel.app/'
     await fetch(webhookUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        text: `⚠️ *Performance drop detected for ${siteName}*\nPrevious: ${previousPerformance} → New: ${newPerformance} (−${drop} points)`,
+        text: `\u26a0\ufe0f *Performance drop detected for ${siteName}*\nPrevious: ${previousPerformance} \u2192 New: ${newPerformance} (\u2212${drop} points)\n<${psiUrl}|View PSI Report> \u00b7 <${dashboardUrl}|Open Dashboard>`,
       }),
     })
   }

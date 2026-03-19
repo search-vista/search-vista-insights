@@ -10,9 +10,21 @@ const CONCURRENCY = 3
 const SOFT_TIMEOUT_MS = 55_000
 const SLACK_ALERT_DROP_THRESHOLD = 10
 
+export async function GET(req: Request) {
+  return runCollection(req)
+}
+
 export async function POST(req: Request) {
-  // Validate cron secret — reject anything without it
-  const secret = req.headers.get('x-cron-secret')
+  return runCollection(req)
+}
+
+async function runCollection(req: Request) {
+  // Vercel cron sends: Authorization: Bearer <CRON_SECRET>
+  // Manual curl sends: x-cron-secret: <CRON_SECRET>
+  const authHeader = req.headers.get('authorization')
+  const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null
+  const secret = bearerToken ?? req.headers.get('x-cron-secret')
+
   if (!secret || secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }

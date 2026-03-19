@@ -9,8 +9,7 @@ import {
   type SortingState,
 } from '@tanstack/react-table'
 import { useState } from 'react'
-import { ArrowUpDown, ArrowUp, ArrowDown, ExternalLink } from 'lucide-react'
-import Link from 'next/link'
+import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import { ScoreBadge } from './ScoreBadge'
 
 export type SiteRow = {
@@ -65,20 +64,13 @@ const columns = [
       return (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
-            <Link
-              href={`/site/${id}`}
-              className="font-medium text-gray-900 hover:underline"
-            >
-              {info.getValue()}
-            </Link>
             <a
               href={psiUrl}
               target="_blank"
               rel="noopener noreferrer"
-              title="View in PageSpeed Insights"
-              className="text-gray-400 hover:text-blue-500 transition-colors"
+              className="font-medium text-gray-900 hover:underline"
             >
-              <ExternalLink size={13} />
+              {info.getValue()}
             </a>
           </div>
           <span className="text-xs text-gray-400 truncate max-w-[240px]">{url}</span>
@@ -138,13 +130,11 @@ const columns = [
       if (!value) return <span className="text-sm text-gray-400 italic">Not checked</span>
       const date = new Date(value)
       if (isNaN(date.getTime())) return <span className="text-sm text-gray-400 italic">Not checked</span>
+      const p = (n: number) => String(n).padStart(2, '0')
+      const formatted = `${p(date.getDate())}/${p(date.getMonth() + 1)}/${String(date.getFullYear()).slice(-2)} ${p(date.getHours())}:${p(date.getMinutes())}`
       return (
         <span className="text-sm text-gray-500 whitespace-nowrap">
-          {date.toLocaleDateString('en-GB', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-          })}
+          {formatted}
         </span>
       )
     },

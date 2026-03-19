@@ -60,6 +60,26 @@ async function getDashboardData(): Promise<SiteRow[]> {
   return rows
 }
 
+function formatLastRun(isoString: string): string {
+  const date = new Date(isoString)
+  const day = date.getDate()
+  const ordinal = (d: number) => {
+    if (d > 3 && d < 21) return 'th'
+    switch (d % 10) {
+      case 1: return 'st'
+      case 2: return 'nd'
+      case 3: return 'rd'
+      default: return 'th'
+    }
+  }
+  const weekday = date.toLocaleDateString('en-GB', { weekday: 'long' })
+  const month = date.toLocaleDateString('en-GB', { month: 'long' })
+  const year = date.getFullYear()
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${weekday}, ${day}${ordinal(day)} ${month} ${year}, ${hours}:${minutes}`
+}
+
 export default async function DashboardPage() {
   const session = await auth()
   const data = await getDashboardData()
@@ -78,12 +98,7 @@ export default async function DashboardPage() {
           <h1 className="text-xl font-semibold text-gray-900">PageSpeed Insights Dashboard</h1>
           {lastChecked && (
             <p className="text-xs text-gray-400 mt-0.5">
-              Last run:{' '}
-              {new Date(lastChecked).toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              })}
+              Last run: {formatLastRun(lastChecked)}
             </p>
           )}
         </div>

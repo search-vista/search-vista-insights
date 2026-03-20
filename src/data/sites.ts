@@ -18,4 +18,9 @@ export const sites: SiteEntry[] = [
   { name: 'PR Scully', url: 'https://prscully.com' },
   { name: 'StudioTech', url: 'https://studiotech.co.uk' },
   { name: 'Zapplaser Studio', url: 'https://zapplaserstudio.co.uk' },
+  { name: 'Roller Shutter', url: 'https://rollershutter.co.uk' },
+  { name: 'London Roller Shutters', url: 'https://londonrollershutters.com' },
+  { name: 'Epic Auditors', url: 'https://epic-auditors.com' },
+  { name: 'Roundway Centre', url: 'https://roundwaycentre.org.uk' },
+  { name: 'AJF Engineering', url: 'https://www.ajfengineering.co.uk' },
 ]

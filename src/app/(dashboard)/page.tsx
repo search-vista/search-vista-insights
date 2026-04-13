@@ -6,9 +6,9 @@ async function getDashboardData(): Promise<SiteRow[]> {
   const supabase = getSupabase()
   const { data, error } = await supabase
     .from('sites')
-    .select('id, name, url')
+    .select('id, name, url, status')
     .order('name')
-  const sites = data as Pick<Site, 'id' | 'name' | 'url'>[] | null
+  const sites = data as Pick<Site, 'id' | 'name' | 'url' | 'status'>[] | null
 
   if (error || !sites) return []
 
@@ -40,6 +40,7 @@ async function getDashboardData(): Promise<SiteRow[]> {
         id: site.id,
         name: site.name,
         url: site.url,
+        status: site.status,
         performance: latest?.performance ?? null,
         accessibility: latest?.accessibility ?? null,
         best_practices: latest?.best_practices ?? null,

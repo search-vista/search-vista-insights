@@ -4,6 +4,7 @@ export type Site = {
   id: string
   name: string
   url: string
+  status: number
   created_at: string
 }
 

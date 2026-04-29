@@ -32,10 +32,11 @@ async function runCollection(req: Request) {
   const startTime = Date.now()
   const supabase = getSupabase()
 
-  // Fetch all sites
+  // Fetch all active sites (status = 1)
   const { data: sitesData, error: sitesError } = await supabase
     .from('sites')
     .select('id, name, url')
+    .eq('status', 1)
   const sites = sitesData as Pick<Site, 'id' | 'name' | 'url'>[] | null
 
   if (sitesError || !sites) {

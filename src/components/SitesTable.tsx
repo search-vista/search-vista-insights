@@ -137,7 +137,7 @@ const columns = [
       const date = new Date(value)
       if (isNaN(date.getTime())) return <span className="text-sm text-gray-400 italic">Not checked</span>
       const p = (n: number) => String(n).padStart(2, '0')
-      const formatted = `${p(date.getDate())}/${p(date.getMonth() + 1)}/${String(date.getFullYear()).slice(-2)} ${p(date.getHours())}:${p(date.getMinutes())}`
+      const formatted = `${p(date.getUTCDate())}/${p(date.getUTCMonth() + 1)}/${String(date.getUTCFullYear()).slice(-2)} ${p(date.getUTCHours())}:${p(date.getUTCMinutes())}`
       return (
         <span className="text-sm text-gray-500 whitespace-nowrap">
           {formatted}
@@ -165,24 +165,26 @@ export function SitesTable({ data }: { data: SiteRow[] }) {
         <thead className="bg-gray-50">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                  className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider select-none cursor-pointer hover:text-gray-700 whitespace-nowrap"
-                >
-                  <span className="flex items-center gap-1">
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                    {header.column.getIsSorted() === 'asc' ? (
-                      <ArrowUp size={12} />
-                    ) : header.column.getIsSorted() === 'desc' ? (
-                      <ArrowDown size={12} />
-                    ) : (
-                      <ArrowUpDown size={12} className="opacity-30" />
-                    )}
-                  </span>
-                </th>
-              ))}
+              {headerGroup.headers.map((header) => {
+                return (
+                  <th
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                    className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider select-none cursor-pointer hover:text-gray-700 whitespace-nowrap"
+                  >
+                    <span className="flex items-center gap-1">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getIsSorted() === 'asc' ? (
+                        <ArrowUp size={12} />
+                      ) : header.column.getIsSorted() === 'desc' ? (
+                        <ArrowDown size={12} />
+                      ) : (
+                        <ArrowUpDown size={12} className="opacity-30" />
+                      )}
+                    </span>
+                  </th>
+                )
+              })}
             </tr>
           ))}
         </thead>

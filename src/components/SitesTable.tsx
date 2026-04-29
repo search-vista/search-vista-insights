@@ -23,6 +23,7 @@ export type SiteRow = {
   lcp: number | null
   cls: number | null
   inp: number | null
+  status: number
   error: string | null
   checked_at: string
   // Deltas vs previous run (null if no previous run exists)
@@ -59,7 +60,7 @@ const columns = [
   col.accessor('name', {
     header: 'Site',
     cell: (info) => {
-      const { id, url } = info.row.original
+      const { id, url, status } = info.row.original
       const psiUrl = `https://pagespeed.web.dev/report?url=${encodeURIComponent(url)}`
       return (
         <div className="flex flex-col gap-0.5">
@@ -72,6 +73,11 @@ const columns = [
             >
               {info.getValue()}
             </a>
+            {status === 0 && (
+              <span className="text-xs bg-gray-100 text-gray-500 rounded px-1.5 py-0.5 font-normal">
+                Inactive
+              </span>
+            )}
           </div>
           <span className="text-xs text-gray-400 truncate max-w-[240px]">{url}</span>
         </div>

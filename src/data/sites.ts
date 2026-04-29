@@ -1,6 +1,7 @@
 export type SiteEntry = {
   name: string
   url: string
+  status?: number
 }
 
 // Add your tracked sites here
